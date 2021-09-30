@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/das_services.dart';
 
-class MyCustomForm extends StatefulWidget
-{
+class MyCustomForm extends StatefulWidget {
   //const MyCustomForm({Key? key}) : super(key: key);
   late String? firstName;
   late String? lastName;
@@ -15,10 +14,15 @@ class MyCustomForm extends StatefulWidget
   Function? callbackListItem;
   Function? triggerText;
 
-
-  MyCustomForm(String? firstName, String? lastName, String? email, String? unid,
-      Function? callbackHomepage, Function? triggerText,Function? callbackListItem,TextEditingController controller)
-  {
+  MyCustomForm(
+      String? firstName,
+      String? lastName,
+      String? email,
+      String? unid,
+      Function? callbackHomepage,
+      Function? triggerText,
+      Function? callbackListItem,
+      TextEditingController controller) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
@@ -30,31 +34,27 @@ class MyCustomForm extends StatefulWidget
   }
 
   @override
-  MyCustomFormState createState()
-  {
+  MyCustomFormState createState() {
     return MyCustomFormState();
   }
 }
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm>
-{
+class MyCustomFormState extends State<MyCustomForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
 
-  void callbackMyCustomFormState()
-  {
+  void callbackMyCustomFormState() {
     print("Running setState in MyCustomFormState");
-    setState(() { });
+    setState(() {});
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
 
     final _formKey = GlobalKey<FormState>();
@@ -65,7 +65,6 @@ class MyCustomFormState extends State<MyCustomForm>
         TextEditingController(text: widget.lastName);
     TextEditingController _emailController =
         TextEditingController(text: widget.email);
-
 
     return Form(
       key: _formKey,
@@ -127,10 +126,8 @@ class MyCustomFormState extends State<MyCustomForm>
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton
-            (
-              onPressed: ()
-              {
+            child: ElevatedButton(
+              onPressed: () async {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
                   // If the form is valid, display a snackbar. In the real world,
@@ -139,17 +136,20 @@ class MyCustomFormState extends State<MyCustomForm>
                     const SnackBar(content: Text('Processing Data')),
                   );
 
-
-                   updateDocument(
+                  print("before documents update");
+                  await updateDocument(
                       _firstNameController.text,
                       _lastnameController.text,
                       _emailController.text,
                       widget.unid ?? '');
+                  print("After documents update");
 
-                  callbackMyCustomFormState();
-                  widget.callbackHomepage!();
-                  widget.callbackListItem!();
+                  print("before triggering callbacks");
+                  //callbackMyCustomFormState();
+                  await widget.callbackHomepage!();
+                  //widget.callbackListItem!();
                   widget.triggerText!(widget.controller.text);
+                  print("After triggering callbacks");
                 }
               },
               child: const Text('Submit'),
